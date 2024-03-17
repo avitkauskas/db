@@ -132,7 +132,7 @@
 (def- schema-sql
   `select
     m.name as tbl,
-    m.name || '.' || pti.name as col
+    pti.name as col
   from sqlite_master m
   join pragma_table_info(m.name) pti on m.name != pti.name`)
 
