@@ -1,4 +1,4 @@
-(import path)
+(import spork/path)
 (import ./helper :prefix "")
 (import ./core :as db)
 

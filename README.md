@@ -111,7 +111,7 @@ db rollback
 
 ## Connecting to the database
 
-```clojure
+```janet
 (import db)
 
 (db/connect (os/getenv "DATABASE_URL"))
@@ -135,21 +135,21 @@ create table todos (
 ```
 
 __insert__
-```clojure
+```janet
 (db/insert {:db/table :todos :name "mow the lawn"}) ; # => {:name "mow the lawn" :db/table :todos :id 1}
 ; # or
 (db/insert :todos {:name "mow the lawn"}) ; # => {:name "mow the lawn" :db/table :todos :id 1}
 ```
 
 __update__
-```clojure
+```janet
 (db/update :todos {:id 1 :name "mow the lawn!"}); # => {:name "mow the lawn!" :db/table :todos :id 1}
 ; # or
 (db/update {:db/table :todos :id 1 :name "mow the lawn!"}); # => {:name "mow the lawn!" :db/table :todos :id 1}
 ```
 
 __delete__
-```clojure
+```janet
 (db/delete {:db/table :todos :id 1}) ; # => {:name "mow the lawn!" :db/table :todos :id 1}
 ; # or
 (db/delete :todos 1) ; # => {:name "mow the lawn!" :db/table :todos :id 1}
@@ -159,13 +159,13 @@ __delete__
 
 There are a few ways in db to do queries, the first way is to find a row by primary key
 
-```clojure
+```janet
 (db/find :todos 1) ; # => {:name "mow the lawn!" :db/table :todos :id 1}
 ```
 
 Another way is to "fetch" by primary key, the main difference being is that you can "scope" things by foreign key.
 
-```clojure
+```janet
 (db/fetch [:todos 1]) ; # => {:name "mow the lawn!" :db/table :todos :id 1}
 ```
 
@@ -186,7 +186,7 @@ create table todos (
 
 You would get the todos by account like so:
 
-```clojure
+```janet
 (db/insert :accounts {:name "account #1"})
 (db/insert :accounts {:name "account #2"})
 
@@ -200,7 +200,7 @@ You would get the todos by account like so:
 
 To return all the rows from an account, use `fetch-all`
 
-```clojure
+```janet
 (db/fetch-all [:accounts 1 :todos]) ; # returns all todos for that account
 
 ; # you can apply sql options like so:
@@ -210,14 +210,14 @@ To return all the rows from an account, use `fetch-all`
 
 That's scoping in db. The next trick is a more flexible way of querying, not by primary key, `from`
 
-```clojure
+```janet
 (db/from :accounts
          :where ["name like ?" "%#1"]) ; # => [{:id 1 :name "account #1"}]
 ```
 
 The same thing applies there with the sql options, `:limit`, `:order`, `:offset` and `:join` should all work. Here's another example with a few options:
 
-```clojure
+```janet
 (db/from :accounts
          :join :todos
          :where ["id = ?" 1])
@@ -227,7 +227,7 @@ The same thing applies there with the sql options, `:limit`, `:order`, `:offset`
 
 There's one more thing that make `from` and `find-by` a little special, `:join/one` and `:join/many`:
 
-```clojure
+```janet
 (db/from :accounts :join/many :todos)
 
 ; # returns

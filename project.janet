@@ -1,7 +1,7 @@
 (declare-project
   :name "db"
   :description "A humble database library for janet"
-  :dependencies ["https://github.com/janet-lang/path"
+  :dependencies ["https://github.com/janet-lang/spork"
                  "https://github.com/joy-framework/tester"]
   :author "Sean Walker"
   :license "MIT"
