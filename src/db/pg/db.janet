@@ -363,6 +363,20 @@
     val))
 
 
+(defn has-updated-at-field? 
+  `Check if the table has the "updated_at" field.`
+  [table-name]
+  (let [schema (schema)]
+    (and (dictionary? schema)
+         (find-index |(= $ "updated_at") (get schema (snake-case table-name))))))
+  
+
+(defn put-updated-at [table-name set-params]
+  (if (has-updated-at-field? table-name)
+    (merge set-params {:updated-at (os/time)})
+    set-params))
+
+
 (defn update
   `Takes a table name and a dictionary with an :id key OR an id value,
   and a dictionary with the new columns/values to be updated, updates the row in the
@@ -400,12 +414,7 @@
       (set params (put (table ;(kvs (args 0))) :db/table nil))))
 
   (let [sql-table-name (snake-case table-name)
-        schema (schema)
-        params (if (and (dictionary? schema)
-                        (find-index |(= $ :updated_at) (get schema (keyword (snake-case table-name)))))
-                 (merge params {:updated-at (os/time)})
-                 params)
-        sql (sql/update sql-table-name params)
+        sql (sql/update sql-table-name (put-updated-at table-name params))
         id (get-id dict-or-id)]
     (first (query sql
                   (merge params {:id id})

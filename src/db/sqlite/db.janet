@@ -422,12 +422,18 @@
     val))
 
 
-(defn- put-updated-at [table-name set-params]
+(defn has-updated-at-field? 
+  `Check if the table has the "updated_at" field.`
+  [table-name]
   (let [schema (schema)]
-    (if (and (dictionary? schema)
-             (find-index |(= $ "updated_at") (get schema (snake-case table-name))))
-      (merge set-params {:updated-at (os/time)})
-      set-params)))
+    (and (dictionary? schema)
+         (find-index |(= $ "updated_at") (get schema (snake-case table-name))))))
+  
+
+(defn put-updated-at [table-name set-params]
+  (if (has-updated-at-field? table-name)
+    (merge set-params {:updated-at (os/time)})
+    set-params))
 
 
 (defn update
